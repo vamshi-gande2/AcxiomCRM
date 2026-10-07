@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AcxiomCRM.Core\AcxiomCRM.Core.csproj" />
+    <Compile Include="..\AcxiomCRM.Core\**\*.cs" Exclude="..\AcxiomCRM.Core\obj\**;..\AcxiomCRM.Core\bin\**" Link="Core\%(RecursiveDir)%(FileName)%(Extension)" />
   </ItemGroup>
 
 </Project>
