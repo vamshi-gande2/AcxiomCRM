@@ -20,10 +20,10 @@ jobs:
         dotnet-version: '10.0.x'
 
     - name: Restore dependencies
-      run: dotnet restore AcxiomCRM.sln
+      run: dotnet restore AcxiomCRM.slnx
 
     - name: Build Solution
-      run: dotnet build AcxiomCRM.sln --no-restore -c Release
+      run: dotnet build AcxiomCRM.slnx --no-restore -c Release
 
     - name: Run xUnit Test Suite
-      run: dotnet test AcxiomCRM.sln --no-build -c Release --verbosity normal
+      run: dotnet test AcxiomCRM.slnx --no-build -c Release --verbosity normal

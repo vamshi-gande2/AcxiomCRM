@@ -3,12 +3,12 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
 # Copy project files and restore
-COPY AcxiomCRM.sln ./
+COPY AcxiomCRM.slnx ./
 COPY AcxiomCRM.Core/AcxiomCRM.Core.csproj AcxiomCRM.Core/
 COPY AcxiomCRM.Web/AcxiomCRM.Web.csproj AcxiomCRM.Web/
 COPY AcxiomCRM.Tests/AcxiomCRM.Tests.csproj AcxiomCRM.Tests/
 
-RUN dotnet restore AcxiomCRM.sln
+RUN dotnet restore AcxiomCRM.slnx
 
 # Copy everything else
 COPY . .
