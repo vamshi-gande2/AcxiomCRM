@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: acxiomcrm
+    runtime: docker
+    plan: free
+    region: oregon
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production

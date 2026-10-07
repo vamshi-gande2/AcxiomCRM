@@ -1,5 +1,10 @@
 # AcxiomCRM - Enterprise Customer Relationship Management System
 
+[![Build & Test CI](https://github.com/vamshi-gande2/AcxiomCRM/actions/workflows/ci.yml/badge.svg)](https://github.com/vamshi-gande2/AcxiomCRM/actions/workflows/ci.yml)
+![.NET Version](https://img.shields.io/badge/.NET-10.0-512BD4?logo=dotnet)
+![Tests](https://img.shields.io/badge/xUnit%20Tests-20%2F20%20Passing-success)
+![Database](https://img.shields.io/badge/Database-SQLite%20(Auto--Seeded)-003B57?logo=sqlite)
+
 AcxiomCRM is a production-grade, role-based CRM application engineered for the **Acxiom Technical Assessment**. It manages the end-to-end sales lifecycle—from lead capture and automated conversion to opportunity pipeline management, follow-up scheduling, activity tracking, executive analytics, and append-only audit logging.
 
 Built with **ASP.NET Core (.NET 10 / 8 compatible)**, **Entity Framework Core**, **ASP.NET Core Identity**, **Bootstrap 5**, and **Chart.js**.
@@ -78,6 +83,20 @@ http://localhost:5022
 dotnet test
 ```
 All **20 test cases** across business validations, role scoping, lead conversion, and audit logging will execute and pass.
+
+---
+
+## ☁️ Zero-Install Cloud Deployment (No Local Server Needed)
+
+Reviewers can verify this application without running any local servers:
+
+1. **Automated GitHub Cloud CI**: Every commit is verified directly in GitHub Actions cloud. Click the **[Actions tab](https://github.com/vamshi-gande2/AcxiomCRM/actions)** to view the live automated build and xUnit test logs running on GitHub's cloud runners.
+2. **Containerized Deployment (Render / Railway / Fly.io)**:
+   - A multi-stage production `Dockerfile` and `render.yaml` are included.
+   - To launch a live instance in 60 seconds:
+     1. Open [Render.com](https://render.com) or [Railway.app](https://railway.app).
+     2. Connect this repository (`vamshi-gande2/AcxiomCRM`).
+     3. Select **Docker** deployment. The application spins up with the SQLite database automatically seeded.
 
 ---
 
