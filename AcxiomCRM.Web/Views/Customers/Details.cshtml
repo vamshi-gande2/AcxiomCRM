@@ -1,0 +1,121 @@
+@model AcxiomCRM.Web.Models.Customer
+@{
+    ViewData["Title"] = "Customer Profile - " + Model.CustomerName;
+}
+
+<div class="mb-3">
+    <a asp-action="Index" class="btn btn-outline-secondary btn-sm mb-2">
+        <i class="bi bi-arrow-left me-1"></i> Back to Customers
+    </a>
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h3 class="fw-bold mb-0 text-dark">@Model.CustomerName</h3>
+            <span class="text-muted small">Code: @Model.CustomerCode &bull; Created: @Model.CreatedDate.ToString("dd MMM yyyy")</span>
+        </div>
+        <div class="d-flex gap-2">
+            <a asp-action="Edit" asp-route-id="@Model.CustomerId" class="btn btn-primary btn-sm">
+                <i class="bi bi-pencil me-1"></i> Edit Profile
+            </a>
+            <a asp-controller="Opportunities" asp-action="Create" asp-route-customerId="@Model.CustomerId" class="btn btn-outline-success btn-sm">
+                <i class="bi bi-plus-lg me-1"></i> New Opportunity
+            </a>
+            <a asp-controller="FollowUps" asp-action="Create" asp-route-customerId="@Model.CustomerId" class="btn btn-outline-warning btn-sm">
+                <i class="bi bi-calendar-plus me-1"></i> Schedule Follow-Up
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-md-4">
+        <div class="card shadow-sm mb-3">
+            <div class="card-header bg-light">Customer Information</div>
+            <div class="card-body small">
+                <div class="mb-2"><strong>Email:</strong> <a href="mailto:@Model.Email">@Model.Email</a></div>
+                <div class="mb-2"><strong>Phone:</strong> @Model.Phone</div>
+                <div class="mb-2"><strong>Company:</strong> @(Model.CompanyName ?? "N/A")</div>
+                <div class="mb-2"><strong>Address:</strong> @(Model.Address ?? "N/A")</div>
+                <div class="mb-2"><strong>City / State:</strong> @(Model.City ?? "N/A"), @(Model.State ?? "N/A")</div>
+                <div class="mb-2">
+                    <strong>Status:</strong>
+                    <span class="badge @(Model.Status == "Active" ? "bg-success" : "bg-secondary")">@Model.Status</span>
+                </div>
+                <div class="mb-0"><strong>Account Owner:</strong> @(Model.CreatedByUser?.FullName ?? "Admin")</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <!-- Associated Opportunities -->
+        <div class="card shadow-sm mb-3">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span>Associated Opportunities (@Model.Opportunities.Count)</span>
+            </div>
+            <div class="card-body p-0 table-responsive">
+                <table class="table table-hover align-middle mb-0 small">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Deal</th>
+                            <th>Stage</th>
+                            <th>Close Date</th>
+                            <th class="text-end">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Opportunities.Any())
+                        {
+                            foreach (var opp in Model.Opportunities)
+                            {
+                                <tr>
+                                    <td class="fw-semibold">@opp.OpportunityName</td>
+                                    <td><span class="badge bg-primary">@opp.Stage (@opp.Probability%)</span></td>
+                                    <td>@opp.ExpectedCloseDate.ToString("dd MMM yyyy")</td>
+                                    <td class="text-end fw-bold">@opp.Amount.ToString("C0")</td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr><td colspan="4" class="text-center text-muted py-2">No opportunities yet.</td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Follow-ups & Activities History -->
+        <div class="card shadow-sm">
+            <div class="card-header">Follow-Ups & Interaction History</div>
+            <div class="card-body p-0 table-responsive">
+                <table class="table table-hover align-middle mb-0 small">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Type</th>
+                            <th>Subject</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.FollowUps.Any())
+                        {
+                            foreach (var fu in Model.FollowUps)
+                            {
+                                <tr>
+                                    <td><span class="badge bg-secondary">@fu.FollowUpType</span></td>
+                                    <td>@fu.Subject</td>
+                                    <td>@fu.FollowUpDate.ToString("dd MMM yyyy")</td>
+                                    <td><span class="badge @(fu.Status == "Completed" ? "bg-success" : "bg-warning")">@fu.Status</span></td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr><td colspan="4" class="text-center text-muted py-2">No follow-ups recorded.</td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

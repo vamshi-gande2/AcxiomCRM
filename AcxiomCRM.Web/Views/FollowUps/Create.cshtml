@@ -1,0 +1,90 @@
+@model AcxiomCRM.Web.Models.FollowUp
+@{
+    ViewData["Title"] = "Schedule Follow-Up";
+    var userRole = ViewBag.UserRole as string ?? "SalesExecutive";
+    var salesUsers = ViewBag.SalesUsers as IList<AcxiomCRM.Web.Models.ApplicationUser>;
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white py-3">
+                <h4 class="fw-bold mb-0 text-dark"><i class="bi bi-calendar-plus text-warning me-2"></i>Schedule New Follow-Up</h4>
+            </div>
+            <div class="card-body p-4">
+                <form asp-action="Create" method="post">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger small py-2"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="Subject" class="form-label small fw-semibold">Subject / Objective <span class="text-danger">*</span></label>
+                        <input asp-for="Subject" class="form-control" placeholder="e.g. Discuss Q4 Pricing Proposal" />
+                        <span asp-validation-for="Subject" class="text-danger small"></span>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="CustomerId" class="form-label small fw-semibold">Related Customer</label>
+                            <select asp-for="CustomerId" asp-items="ViewBag.Customers" class="form-select">
+                                <option value="">-- None / Select Customer --</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="LeadId" class="form-label small fw-semibold">Related Lead</label>
+                            <select asp-for="LeadId" asp-items="ViewBag.Leads" class="form-select">
+                                <option value="">-- None / Select Lead --</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="FollowUpDate" class="form-label small fw-semibold">Follow-Up Date <span class="text-danger">*</span></label>
+                            <input asp-for="FollowUpDate" class="form-control" type="date" min="@DateTime.UtcNow.ToString("yyyy-MM-dd")" />
+                            <span asp-validation-for="FollowUpDate" class="text-danger small"></span>
+                            <div class="form-text text-muted small">Cannot be earlier than today for planned activities.</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="FollowUpType" class="form-label small fw-semibold">Activity Type <span class="text-danger">*</span></label>
+                            <select asp-for="FollowUpType" class="form-select">
+                                <option value="Call">Call</option>
+                                <option value="Email">Email</option>
+                                <option value="Meeting">Meeting</option>
+                            </select>
+                            <span asp-validation-for="FollowUpType" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    @if (userRole != "SalesExecutive" && salesUsers != null)
+                    {
+                        <div class="mb-3">
+                            <label asp-for="AssignedTo" class="form-label small fw-semibold">Assign Executive</label>
+                            <select asp-for="AssignedTo" class="form-select">
+                                @foreach (var user in salesUsers)
+                                {
+                                    <option value="@user.Id">@user.FullName (@user.Email)</option>
+                                }
+                            </select>
+                        </div>
+                    }
+
+                    <div class="mb-3">
+                        <label asp-for="Remarks" class="form-label small fw-semibold">Remarks / Context</label>
+                        <textarea asp-for="Remarks" class="form-control" rows="3" placeholder="Key talking points or agenda..."></textarea>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
+                        <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-warning px-4 fw-semibold">
+                            <i class="bi bi-calendar-check me-1"></i> Schedule
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

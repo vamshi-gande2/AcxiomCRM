@@ -1,0 +1,84 @@
+@model AcxiomCRM.Web.Models.Activity
+@{
+    ViewData["Title"] = "Log Activity";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white py-3">
+                <h4 class="fw-bold mb-0 text-dark"><i class="bi bi-clock-history text-secondary me-2"></i>Log New Activity</h4>
+            </div>
+            <div class="card-body p-4">
+                <form asp-action="Create" method="post">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger small py-2"></div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-4">
+                            <label asp-for="ActivityType" class="form-label small fw-semibold">Activity Type <span class="text-danger">*</span></label>
+                            <select asp-for="ActivityType" class="form-select">
+                                <option value="Call">Phone Call</option>
+                                <option value="Meeting">Meeting</option>
+                                <option value="Email">Email</option>
+                                <option value="Task">Task</option>
+                            </select>
+                            <span asp-validation-for="ActivityType" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-8">
+                            <label asp-for="Subject" class="form-label small fw-semibold">Subject <span class="text-danger">*</span></label>
+                            <input asp-for="Subject" class="form-control" placeholder="e.g. Discovery Call regarding migration" />
+                            <span asp-validation-for="Subject" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="CustomerId" class="form-label small fw-semibold">Customer (Optional)</label>
+                            <select asp-for="CustomerId" asp-items="ViewBag.Customers" class="form-select">
+                                <option value="">-- None --</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="LeadId" class="form-label small fw-semibold">Lead (Optional)</label>
+                            <select asp-for="LeadId" asp-items="ViewBag.Leads" class="form-select">
+                                <option value="">-- None --</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="ActivityDate" class="form-label small fw-semibold">Date & Time <span class="text-danger">*</span></label>
+                            <input asp-for="ActivityDate" class="form-control" type="datetime-local" value="@DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm")" />
+                            <span asp-validation-for="ActivityDate" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Status" class="form-label small fw-semibold">Status</label>
+                            <select asp-for="Status" class="form-select">
+                                <option value="Completed">Completed</option>
+                                <option value="Planned">Planned</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Description" class="form-label small fw-semibold">Activity Notes / Transcript</label>
+                        <textarea asp-for="Description" class="form-control" rows="4" placeholder="Detailed notes, discussion topics, and next steps..."></textarea>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
+                        <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-secondary px-4 fw-semibold">
+                            <i class="bi bi-save me-1"></i> Save Activity
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
