@@ -60,7 +60,7 @@ The system automatically initializes and seeds the SQLite database (`acxiomcrm.d
 
 ### 1. Clone & Navigate
 ```bash
-git clone https://github.com/<your-username>/AcxiomCRM.git
+git clone https://github.com/vamshi-gande2/AcxiomCRM.git
 cd AcxiomCRM
 ```
 
@@ -68,9 +68,9 @@ cd AcxiomCRM
 ```bash
 dotnet run --project AcxiomCRM.Web
 ```
-The database will be automatically created and seeded on first run. Open your browser and navigate to:
+The database (`acxiomcrm.db`) will be automatically created, migrated, and seeded with sample accounts and data on first run. Open your browser and navigate to:
 ```
-https://localhost:5001  or  http://localhost:5000
+http://localhost:5022
 ```
 
 ### 3. Run Automated Tests
