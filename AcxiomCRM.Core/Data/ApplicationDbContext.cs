@@ -1,0 +1,122 @@
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using AcxiomCRM.Web.Models;
+
+namespace AcxiomCRM.Web.Data;
+
+public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+{
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        : base(options)
+    {
+    }
+
+    public DbSet<Customer> Customers => Set<Customer>();
+    public DbSet<Lead> Leads => Set<Lead>();
+    public DbSet<Opportunity> Opportunities => Set<Opportunity>();
+    public DbSet<FollowUp> FollowUps => Set<FollowUp>();
+    public DbSet<Activity> Activities => Set<Activity>();
+    public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
+
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        base.OnModelCreating(builder);
+
+        // Customer unique constraints
+        builder.Entity<Customer>()
+            .HasIndex(c => c.Email)
+            .IsUnique();
+
+        builder.Entity<Customer>()
+            .HasIndex(c => c.Phone)
+            .IsUnique();
+
+        builder.Entity<Customer>()
+            .HasIndex(c => c.CustomerCode)
+            .IsUnique();
+
+        // Lead unique code
+        builder.Entity<Lead>()
+            .HasIndex(l => l.LeadCode)
+            .IsUnique();
+
+        // Relationships & Restrict cascade deletes
+        builder.Entity<Customer>()
+            .HasOne(c => c.CreatedByUser)
+            .WithMany()
+            .HasForeignKey(c => c.CreatedBy)
+            .IsRequired(false)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<Lead>()
+            .HasOne(l => l.AssignedToUser)
+            .WithMany()
+            .HasForeignKey(l => l.AssignedTo)
+            .IsRequired(false)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<Opportunity>()
+            .HasOne(o => o.Customer)
+            .WithMany(c => c.Opportunities)
+            .HasForeignKey(o => o.CustomerId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<Opportunity>()
+            .HasOne(o => o.Lead)
+            .WithMany(l => l.Opportunities)
+            .HasForeignKey(o => o.LeadId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        builder.Entity<Opportunity>()
+            .HasOne(o => o.AssignedToUser)
+            .WithMany()
+            .HasForeignKey(o => o.AssignedTo)
+            .IsRequired(false)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<FollowUp>()
+            .HasOne(f => f.Customer)
+            .WithMany(c => c.FollowUps)
+            .HasForeignKey(f => f.CustomerId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<FollowUp>()
+            .HasOne(f => f.Lead)
+            .WithMany(l => l.FollowUps)
+            .HasForeignKey(f => f.LeadId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<FollowUp>()
+            .HasOne(f => f.AssignedToUser)
+            .WithMany()
+            .HasForeignKey(f => f.AssignedTo)
+            .IsRequired(false)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<Activity>()
+            .HasOne(a => a.Customer)
+            .WithMany(c => c.Activities)
+            .HasForeignKey(a => a.CustomerId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<Activity>()
+            .HasOne(a => a.Lead)
+            .WithMany(l => l.Activities)
+            .HasForeignKey(a => a.LeadId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<Activity>()
+            .HasOne(a => a.AssignedToUser)
+            .WithMany()
+            .HasForeignKey(a => a.AssignedTo)
+            .IsRequired(false)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<AuditLog>()
+            .HasOne(al => al.User)
+            .WithMany()
+            .HasForeignKey(al => al.UserId)
+            .IsRequired(false)
+            .OnDelete(DeleteBehavior.SetNull);
+    }
+}
